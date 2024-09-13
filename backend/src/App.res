@@ -1,4 +1,6 @@
 open Express
+@module("dotenv") external config: unit => unit = "config"
+config()
 
 let app = expressCjs()
 

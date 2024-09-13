@@ -1,28 +1,41 @@
 // open Js.Promise
 
-// // Charge la clé API OpenAI depuis les variables d'environnement
-// let apiKey = Js.Option.getExn(Node.Process.env["OPENAI_API_KEY"])
+// Import du fetch depuis bs-fetch
+// @module("bs-fetch") external fetch: (string, {..}) => Js.Promise.t<Response.t> = "default"
 
-// // Fonction pour générer une question de quiz en appelant l'API OpenAI
-// let generateQuizQuestion = (topic: string): Js.Promise.t(option(string)) => {
+// Binding pour accéder à process.env
+@module("process") external env: {..} = "env"
+
+// Récupération de la clé API OpenAI
+let apiKey = switch Js.Nullable.toOption(env["OPENAI_API_KEY"]) {
+| Some(key) => key
+| None => "default-api-key"
+}
+
+// let generateQuizQuestion = (topic: string): Js.Promise.t<option<string>> => {
 //   let body = {
 //     "model": "text-davinci-003",
 //     "prompt": `Generate a quiz question about ${topic}`,
 //     "max_tokens": 100,
 //   }
 
-//   Fetch.postWithBody(
+//   fetch(
 //     "https://api.openai.com/v1/completions",
-//     ~headers={
-//       "Authorization": "Bearer " ++ apiKey,
-//       "Content-Type": "application/json",
-//     },
-//     ~body=Js.Json.stringify(body),
+//     {
+//       "method": "POST",
+//       "headers": {
+//         "Authorization": "Bearer " ++ apiKey,
+//         "Content-Type": "application/json",
+//       },
+//       "body": Js.Json.stringify(body),
+//     }
 //   )
 //   |> then_(response => {
-//     switch response.status {
-//     | 200 => response->text()->then_(question => resolve(Some(question)))
-//     | _ => resolve(None)
+//     if (response.status === 200) {
+//       response->text()->then_(question => resolve(Some(question)))
+//     } else {
+//       resolve(None)
 //     }
 //   })
+//   |> catch(_ => resolve(None))
 // }
