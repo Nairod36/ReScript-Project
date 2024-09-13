@@ -4,6 +4,32 @@ import * as Express from "express";
 
 var quizRouter = Express.Router();
 
+function processSpeech(transcript) {
+  switch (transcript) {
+    case "start quiz" :
+        return "Quiz started";
+    case "stop quiz" :
+        return "Quiz stopped";
+    default:
+      return "Command not recognized";
+  }
+}
+
+quizRouter.post("/process-speech", (function (req, res) {
+        var body = req.body;
+        var transcript = body.transcript;
+        if (transcript == null) {
+          res.status(400).json({
+                error: "Missing transcript"
+              });
+          return ;
+        }
+        var result = processSpeech(transcript);
+        res.status(200).json({
+              processedResult: result
+            });
+      }));
+
 quizRouter.get("/quiz", (function (_req, res) {
         res.status(200).json({
               question: "What is ReScript?"
@@ -30,6 +56,7 @@ function addRoutes(app) {
 
 export {
   quizRouter ,
+  processSpeech ,
   addRoutes ,
 }
 /* quizRouter Not a pure module */
