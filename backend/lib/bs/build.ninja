@@ -1,0 +1,36 @@
+rescript = 1
+g_finger := C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml\install.stamp
+g_finger := C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml\install.stamp
+rule astj
+  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe"  -bs-v 11.1.4 -bs-jsx 4 -uncurried -open RescriptCore -absname -bs-ast -o $out $i
+o src\App.ast : astj ..\..\src\App.res
+rule deps
+  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsb_helper.exe" -hash ab555708bba0630cd882117c9001c123 $in
+  restat = 1
+o src\App.d : deps src\App.ast src\App.iast
+o src\App.iast : astj ..\..\src\App.resi
+rule mi
+  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe" -I "src\assets" -I src -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml" -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml" -open RescriptCore  -uncurried -bs-v $g_finger $i
+  dyndep = 1
+  restat = 1
+o src\App.cmi : mi src\App.iast
+rule mj
+  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe" -bs-read-cmi -I "src\assets" -I src -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml" -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml" -open RescriptCore  -uncurried -bs-package-name test-rescript -bs-package-output esmodule:$in_d:.res.mjs -bs-v $g_finger $i
+  dyndep = 1
+  restat = 1
+o src\App.cmj ..\..\src\App.res.mjs : mj src\App.ast src\App.cmi
+o src\Demo.ast : astj ..\..\src\Demo.res
+o src\Demo.d : deps src\Demo.ast
+rule mij
+  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe" -I "src\assets" -I src -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml" -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml" -open RescriptCore  -uncurried -bs-package-name test-rescript -bs-package-output esmodule:$in_d:.res.mjs -bs-v $g_finger $i
+  dyndep = 1
+  restat = 1
+o src\Demo.cmj src\Demo.cmi ..\..\src\Demo.res.mjs : mij src\Demo.ast
+o src\Main.ast : astj ..\..\src\Main.res
+o src\Main.d : deps src\Main.ast
+o src\Main.cmj src\Main.cmi ..\..\src\Main.res.mjs : mij src\Main.ast
+o src\Button.ast : astj ..\..\src\Button.res
+o src\Button.d : deps src\Button.ast src\Button.iast
+o src\Button.iast : astj ..\..\src\Button.resi
+o src\Button.cmi : mi src\Button.iast
+o src\Button.cmj ..\..\src\Button.res.mjs : mj src\Button.ast src\Button.cmi
