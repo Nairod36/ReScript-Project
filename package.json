@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@rescript/core": "^1.6.0",
+    "rescript": "^11.1.4"
+  },
+  "scripts": {
+    "res:build": "rescript",
+    "res:clean": "rescript clean",
+    "res:dev": "rescript -w"
+  }
+}
