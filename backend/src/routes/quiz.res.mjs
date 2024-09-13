@@ -24,6 +24,11 @@ app.post("/quiz", (function (req, res) {
         }
       }));
 
+app.use(function (err, _req, res, _next) {
+      console.error(err);
+      res.status(500).end("An error occured");
+    });
+
 export {
   app ,
 }

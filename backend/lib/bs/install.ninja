@@ -15,8 +15,12 @@ o Express.cmt : cp ..\bs\src\Express.cmt
 o Express.res : cp ..\..\src\Express.res
 o Express.resi : cp ..\..\src\Express.resi
 o Express.cmti : cp ..\bs\src\Express.cmti
+o openiaService.cmi : cp ..\bs\src\service\openiaService.cmi
+o openiaService.cmj : cp ..\bs\src\service\openiaService.cmj
+o openiaService.cmt : cp ..\bs\src\service\openiaService.cmt
+o openiaService.res : cp ..\..\src\service\openiaService.res
 o quiz.cmi : cp ..\bs\src\routes\quiz.cmi
 o quiz.cmj : cp ..\bs\src\routes\quiz.cmj
 o quiz.cmt : cp ..\bs\src\routes\quiz.cmt
 o quiz.res : cp ..\..\src\routes\quiz.res
-build install.stamp : touch App.cmi App.cmj Express.cmi Express.cmj quiz.cmi quiz.cmj 
+build install.stamp : touch App.cmi App.cmj Express.cmi Express.cmj openiaService.cmi openiaService.cmj quiz.cmi quiz.cmj 

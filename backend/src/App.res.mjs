@@ -13,20 +13,6 @@ app.get("/", (function (_req, res) {
             });
       }));
 
-app.post("/ping", (function (req, res) {
-        var body = req.body;
-        var name = body.name;
-        if (name == null) {
-          res.status(400).json({
-                error: "Missing name"
-              });
-        } else {
-          res.status(200).json({
-                message: "Hello " + name
-              });
-        }
-      }));
-
 app.use(function (err, _req, res, _next) {
       console.error(err);
       res.status(500).end("An error occured");
