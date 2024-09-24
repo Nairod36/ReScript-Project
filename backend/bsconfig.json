@@ -20,7 +20,10 @@
     "suffix": ".bs.js",
     "bs-dependencies": [
       "bs-fetch",
-      "rescript-express"
+      "fetch",
+      "rescript-express",
+      "webapi"
+
     ]
   }
   

@@ -1,4 +1,5 @@
 open Express
+open UserService // Assurez-vous d'importer le service
 @module("dotenv") external config: unit => unit = "config"
 config()
 
@@ -16,29 +17,51 @@ router->Router.use((req, _res, next) => {
 // Middleware pour gérer les erreurs dans le routeur
 router->Router.useWithError((err, _req, res, _next) => {
   Js.Console.error(err)
-  let _ = res->status(500)->endWithData("An error occured")
-})
-
-// Ajout du routeur à l'application
-app->useRouterWithPath("/someRoute", router)
-
-// Middleware pour parser le JSON
-app->use(jsonMiddleware())
-
-// Route GET
-app->get("/", (_req, res) => {
-  let _ = res->status(200)->json({"ok": true})
-})
-
-// Route qui gère toutes les méthodes HTTP
-app->all("/allRoute", (_req, res) => {
-  res->status(200)->json({"ok": true})->ignore
+  let _ = res->status(500)->endWithData("An error occurred")
 })
 
 // Middleware global pour gérer les erreurs
 app->useWithError((err, _req, res, _next) => {
   Js.Console.error(err)
-  let _ = res->status(500)->endWithData("An error occured")
+  let _ = res->status(500)->endWithData("An error occurred")
+})
+
+// Middleware pour parser le JSON
+app->use(jsonMiddleware())
+
+// Ajout du routeur à l'application
+app->useRouterWithPath("/api/users", router)
+
+// Route pour enregistrer un nouvel utilisateur
+router->Router.post("/register", (req, res) => {
+  let user = req->Express.requestBody
+  let username = user["username"]->Js.Json.decodeString |> Js.Option.getExn
+  let password = user["password"]->Js.Json.decodeString |> Js.Option.getExn
+
+  registerUser(username, password)
+  |> then_(result => {
+    switch result {
+    | Result.Ok(message) => res->status(201)->json({"message": message})
+    | Result.Error(errMsg) => res->status(400)->json({"error": errMsg})
+    }
+  })
+  |> catch(_ => res->status(500)->json({"error": "Internal Server Error"}))
+})
+
+// Route pour connecter un utilisateur
+router->Router.post("/login", (req, res) => {
+  let credentials = req->Express.requestBody
+  let username = credentials["username"]->Js.Json.decodeString |> Js.Option.getExn
+  let password = credentials["password"]->Js.Json.decodeString |> Js.Option.getExn
+
+  loginUser(username, password)
+  |> then_(result => {
+    switch result {
+    | Result.Ok(message) => res->status(200)->json({"message": message})
+    | Result.Error(errMsg) => res->status(400)->json({"error": errMsg})
+    }
+  })
+  |> catch(_ => res->status(500)->json({"error": "Internal Server Error"}))
 })
 
 // Démarrage du serveur sur le port 8081
