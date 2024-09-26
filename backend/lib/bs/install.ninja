@@ -15,12 +15,20 @@ o Express.cmt : cp ..\bs\src\Express.cmt
 o Express.res : cp ..\..\src\Express.res
 o Express.resi : cp ..\..\src\Express.resi
 o Express.cmti : cp ..\bs\src\Express.cmti
-o openiaService.cmi : cp ..\bs\src\service\openiaService.cmi
-o openiaService.cmj : cp ..\bs\src\service\openiaService.cmj
-o openiaService.cmt : cp ..\bs\src\service\openiaService.cmt
-o openiaService.res : cp ..\..\src\service\openiaService.res
+o UserService.cmi : cp ..\bs\src\service\UserService.cmi
+o UserService.cmj : cp ..\bs\src\service\UserService.cmj
+o UserService.cmt : cp ..\bs\src\service\UserService.cmt
+o UserService.res : cp ..\..\src\service\UserService.res
+o openaiService.cmi : cp ..\bs\src\service\openaiService.cmi
+o openaiService.cmj : cp ..\bs\src\service\openaiService.cmj
+o openaiService.cmt : cp ..\bs\src\service\openaiService.cmt
+o openaiService.res : cp ..\..\src\service\openaiService.res
 o quiz.cmi : cp ..\bs\src\routes\quiz.cmi
 o quiz.cmj : cp ..\bs\src\routes\quiz.cmj
 o quiz.cmt : cp ..\bs\src\routes\quiz.cmt
 o quiz.res : cp ..\..\src\routes\quiz.res
-build install.stamp : touch App.cmi App.cmj Express.cmi Express.cmj openiaService.cmi openiaService.cmj quiz.cmi quiz.cmj 
+o userModel.cmi : cp ..\bs\src\model\userModel.cmi
+o userModel.cmj : cp ..\bs\src\model\userModel.cmj
+o userModel.cmt : cp ..\bs\src\model\userModel.cmt
+o userModel.res : cp ..\..\src\model\userModel.res
+build install.stamp : touch App.cmi App.cmj Express.cmi Express.cmj UserService.cmi UserService.cmj openaiService.cmi openaiService.cmj quiz.cmi quiz.cmj userModel.cmi userModel.cmj 
