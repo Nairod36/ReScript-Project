@@ -1,7 +1,7 @@
 @react.component
 let make = () => {
   <div>
-    <Header />
-    <Page />
+    <h1> {"Quiz Application"->React.string} </h1>
+    <SpeechReco.make />
   </div>
 }

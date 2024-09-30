@@ -1,21 +1,21 @@
 rescript = 1
-g_finger := C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml\install.stamp
-g_finger := C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml\install.stamp
+g_finger := c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml\install.stamp
+g_finger := c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml\install.stamp
 rule astj
-  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe"  -bs-v 11.1.4 -bs-jsx 4 -uncurried -open RescriptCore -absname -bs-ast -o $out $i
+  command = "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe"  -bs-v 11.1.4 -bs-jsx 4 -uncurried -open RescriptCore -absname -bs-ast -o $out $i
 o src\App.ast : astj ..\..\src\App.res
 rule deps
-  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsb_helper.exe" -hash 99441a37f43bc61556d310273d75dcdf $in
+  command = "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsb_helper.exe" -hash 99441a37f43bc61556d310273d75dcdf $in
   restat = 1
 o src\App.d : deps src\App.ast src\App.iast
 o src\App.iast : astj ..\..\src\App.resi
 rule mi
-  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe" -I "src\assets" -I "src\routes" -I "src\service" -I src -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml" -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml" -open RescriptCore  -uncurried -bs-v $g_finger $i
+  command = "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe" -I "src\assets" -I "src\routes" -I "src\service" -I src -I "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml" -I "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml" -open RescriptCore  -uncurried -bs-v $g_finger $i
   dyndep = 1
   restat = 1
 o src\App.cmi : mi src\App.iast
 rule mj
-  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe" -bs-read-cmi -I "src\assets" -I "src\routes" -I "src\service" -I src -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml" -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml" -open RescriptCore  -uncurried -bs-package-name test-rescript -bs-package-output esmodule:$in_d:.res.mjs -bs-v $g_finger $i
+  command = "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe" -bs-read-cmi -I "src\assets" -I "src\routes" -I "src\service" -I src -I "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml" -I "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml" -open RescriptCore  -uncurried -bs-package-name test-rescript -bs-package-output esmodule:$in_d:.res.mjs -bs-v $g_finger $i
   dyndep = 1
   restat = 1
 o src\App.cmj ..\..\src\App.res.mjs : mj src\App.ast src\App.cmi
@@ -27,7 +27,7 @@ o src\Express.cmj ..\..\src\Express.res.mjs : mj src\Express.ast src\Express.cmi
 o src\service\openiaService.ast : astj ..\..\src\service\openiaService.res
 o src\service\openiaService.d : deps src\service\openiaService.ast
 rule mij
-  command = "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe" -I "src\assets" -I "src\routes" -I "src\service" -I src -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml" -I "C:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml" -open RescriptCore  -uncurried -bs-package-name test-rescript -bs-package-output esmodule:$in_d:.res.mjs -bs-v $g_finger $i
+  command = "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\rescript\win32\bsc.exe" -I "src\assets" -I "src\routes" -I "src\service" -I src -I "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\core\lib\ocaml" -I "c:\Users\Nairod\Documents\ESGI\Projet\ReScript-Project\backend\node_modules\@rescript\react\lib\ocaml" -open RescriptCore  -uncurried -bs-package-name test-rescript -bs-package-output esmodule:$in_d:.res.mjs -bs-v $g_finger $i
   dyndep = 1
   restat = 1
 o src\service\openiaService.cmj src\service\openiaService.cmi ..\..\src\service\openiaService.res.mjs : mij src\service\openiaService.ast
