@@ -20,7 +20,7 @@ npm run res:dev
 In another tab, run the Vite dev server:
 
 ```sh
-npm run dev
+npm run dev || npx vite --force 
 ```
 
 ## Tips
