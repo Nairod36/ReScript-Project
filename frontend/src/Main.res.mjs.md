@@ -1,9 +1,8 @@
-// Good config
 import * as React from "react";
 import './index.css';
-import * as ReactDOM from "react-dom/client";
+import * as ReactDOM from "react-dom/client"; // <-- Correction ici
 import * as JsxRuntime from "react/jsx-runtime";
-import * as App from "./App.res.mjs";
+import * as App from "./App.res.mjs"; // <-- Assurez-vous que cela correspond à votre structure de projet
 
 console.log("Main.res.mjs is loaded");
 
