@@ -23,6 +23,22 @@ In another tab, run the Vite dev server:
 npm run dev || npx vite --force 
 ```
 
+## Ajustement 
+
+Si ça ne fonctionne pas, mettre dans un terminal : 
+
+```sh
+npm run res:dev
+```
+
+dans un deuxième terminal : 
+
+```sh
+npx vite --force 
+```
+
+Copier le contenu de `Main.res.mjs.md` dans `Main.res.mjs`
+
 ## Tips
 
 ### Fast Refresh & ReScript
