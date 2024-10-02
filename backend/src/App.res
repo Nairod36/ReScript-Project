@@ -1,5 +1,5 @@
 open Express
-open UserService // Assurez-vous d'importer le service
+open UserRoutes // Assurez-vous d'importer les routes utilisateur
 @module("dotenv") external config: unit => unit = "config"
 config()
 
@@ -30,40 +30,7 @@ app->useWithError((err, _req, res, _next) => {
 app->use(jsonMiddleware())
 
 // Ajout du routeur à l'application
-app->use("/api/users", router)
-
-// Route pour enregistrer un nouvel utilisateur
-router->Router.post("/register", (req, res) => {
-  let user = req->Express.requestBody
-  let username = user["username"]->Js.Json.decodeString |> Js.Option.getExn
-  let email = user["email"]->Js.Json.decodeString |> Js.Option.getExn // Ajout d'email
-  let password = user["password"]->Js.Json.decodeString |> Js.Option.getExn
-
-  UserService.registerUser(username, email, password)
-  |> then_(result => {
-    switch result {
-    | Result.Ok(message) => res->status(201)->json({"message": message})
-    | Result.Error(errMsg) => res->status(400)->json({"error": errMsg})
-    }
-  })
-  |> catch(_ => res->status(500)->json({"error": "Internal Server Error"}))
-})
-
-// Route pour connecter un utilisateur
-router->Router.post("/login", (req, res) => {
-  let credentials = req->Express.requestBody
-  let username = credentials["username"]->Js.Json.decodeString |> Js.Option.getExn
-  let password = credentials["password"]->Js.Json.decodeString |> Js.Option.getExn
-
-  UserService.loginUser(username, password)
-  |> then_(result => {
-    switch result {
-    | Result.Ok(message) => res->status(200)->json({"message": message})
-    | Result.Error(errMsg) => res->status(400)->json({"error": errMsg})
-    }
-  })
-  |> catch(_ => res->status(500)->json({"error": "Internal Server Error"}))
-})
+app->use("/api/users", UserRoutes.router)
 
 // Démarrage du serveur sur le port 8081
 let port = 8081

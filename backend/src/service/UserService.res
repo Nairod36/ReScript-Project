@@ -1,7 +1,6 @@
-// service/userService.res
 open Js.Promise
 open Belt
-open UserModel 
+open UserModel
 
 let users: ref<array<UserModel.user>> = ref([])
 
@@ -28,4 +27,3 @@ let loginUser = (username: string, password: string): Js.Promise.t<Result.t<stri
   | None => Promise.resolve(Result.Error("Invalid username or password"))
   }
 }
-
