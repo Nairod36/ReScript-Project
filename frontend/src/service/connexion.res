@@ -8,7 +8,8 @@ let register = async (user: user): Js.Promise.t<Js.Json.t> => {
     "username": user.username,
     "email": user.email,
     "password": user.password,
-  }
+  } 
+  open Fetch
 
   let response = await fetch(
     apiUrl ++ "/register",
@@ -33,6 +34,7 @@ let login = async (username: string, password: string): Js.Promise.t<Js.Json.t> 
     "username": username,
     "password": password,
   }
+  open Fetch
 
   let response = await fetch(
     apiUrl ++ "/login",
