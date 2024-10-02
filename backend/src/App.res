@@ -30,15 +30,16 @@ app->useWithError((err, _req, res, _next) => {
 app->use(jsonMiddleware())
 
 // Ajout du routeur à l'application
-app->useRouterWithPath("/api/users", router)
+app->use("/api/users", router)
 
 // Route pour enregistrer un nouvel utilisateur
 router->Router.post("/register", (req, res) => {
   let user = req->Express.requestBody
   let username = user["username"]->Js.Json.decodeString |> Js.Option.getExn
+  let email = user["email"]->Js.Json.decodeString |> Js.Option.getExn // Ajout d'email
   let password = user["password"]->Js.Json.decodeString |> Js.Option.getExn
 
-  registerUser(username, password)
+  UserService.registerUser(username, email, password)
   |> then_(result => {
     switch result {
     | Result.Ok(message) => res->status(201)->json({"message": message})
@@ -54,7 +55,7 @@ router->Router.post("/login", (req, res) => {
   let username = credentials["username"]->Js.Json.decodeString |> Js.Option.getExn
   let password = credentials["password"]->Js.Json.decodeString |> Js.Option.getExn
 
-  loginUser(username, password)
+  UserService.loginUser(username, password)
   |> then_(result => {
     switch result {
     | Result.Ok(message) => res->status(200)->json({"message": message})

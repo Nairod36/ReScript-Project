@@ -28,3 +28,4 @@ let loginUser = (username: string, password: string): Js.Promise.t<Result.t<stri
   | None => Promise.resolve(Result.Error("Invalid username or password"))
   }
 }
+
