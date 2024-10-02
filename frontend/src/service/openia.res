@@ -1,30 +1,26 @@
 open Js.Promise
-open Fetch // Assurez-vous que ce module est installé
 
-let apiUrl = "http://localhost:8081/api/generate-quiz" 
+let apiUrl = "http://localhost:8081/api/generate-quiz"
 
-let generateQuizQuestion = (topic: string): Js.Promise.t<Js.Json.t> => {
+let generateQuizQuestion = async (topic: string): Js.Promise.t<Js.Json.t> => {
   let body = {
     "topic": topic,
   }
 
-  Fetch.fetch(
+  let response = await fetch(
     apiUrl,
     {
-      "method": "POST",
-      "headers": {
+      method: #POST,
+      headers: Headers.fromObject({
         "Content-Type": "application/json",
-      },
-      "body": Js.Json.stringify(body),
-    }
+      }),
+      body: body->Js.Json.stringifyAny->Body.string,
+    },
   )
-  |> then_(response => {
-    if (response.status === 200) {
-      response->Fetch.text()
-      |> then_(text => resolve(Js.Json.parse(text)))
-    } else {
-      resolve(Js.Json.null)
-    }
-  })
-  |> catch(_ => resolve(Js.Json.null))
+
+  if (response->Response.ok) {
+    await response->Response.json()
+  } else {
+    Promise.resolve(Js.Json.null)
+  }
 }

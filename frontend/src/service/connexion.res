@@ -1,59 +1,53 @@
 open Js.Promise
-open Fetch // Assurez-vous que ce module est installé
 open User
 
-let apiUrl = "http://localhost:8081/api/users" 
-let register = (user: user): Js.Promise.t<Js.Json.t> => {
+let apiUrl = "http://localhost:8081/api/users"
+
+let register = async (user: user): Js.Promise.t<Js.Json.t> => {
   let body = {
     "username": user.username,
     "email": user.email,
     "password": user.password,
   }
 
-  Fetch.fetch(
+  let response = await fetch(
     apiUrl ++ "/register",
     {
-      "method": "POST",
-      "headers": {
+      method: #POST,
+      headers: Headers.fromObject({
         "Content-Type": "application/json",
-      },
-      "body": Js.Json.stringify(body),
-    }
+      }),
+      body: body->Js.Json.stringifyAny->Body.string,
+    },
   )
-  |> then_(response => {
-    if (response.status === 201) {
-      response->Fetch.text()
-      |> then_(text => resolve(Js.Json.parse(text)))
-    } else {
-      resolve(Js.Json.null)
-    }
-  })
-  |> catch(_ => resolve(Js.Json.null))
+
+  if (response->Response.status === 201) {
+    await response->Response.json()
+  } else {
+    Promise.resolve(Js.Json.null)
+  }
 }
 
-let login = (username: string, password: string): Js.Promise.t<Js.Json.t> => {
+let login = async (username: string, password: string): Js.Promise.t<Js.Json.t> => {
   let body = {
     "username": username,
     "password": password,
   }
 
-  Fetch.fetch(
+  let response = await fetch(
     apiUrl ++ "/login",
     {
-      "method": "POST",
-      "headers": {
+      method: #POST,
+      headers: Headers.fromObject({
         "Content-Type": "application/json",
-      },
-      "body": Js.Json.stringify(body),
-    }
+      }),
+      body: body->Js.Json.stringifyAny->Body.string,
+    },
   )
-  |> then_(response => {
-    if (response.status === 200) {
-      response->Fetch.text()
-      |> then_(text => resolve(Js.Json.parse(text)))
-    } else {
-      resolve(Js.Json.null)
-    }
-  })
-  |> catch(_ => resolve(Js.Json.null))
+
+  if (response->Response.ok) {
+    await response->Response.json()
+  } else {
+    Promise.resolve(Js.Json.null)
+  }
 }
