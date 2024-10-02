@@ -11,6 +11,20 @@ let processSpeech = (transcript: string): string => {
   }
 }
 
+router->Router.post("/generate-quiz", (req, res) => {
+  let topic = req->Express.requestBody->Js.Json.decodeString |> Js.Option.getExn
+
+  // Appelez votre fonction pour générer une question de quiz
+  generateQuizQuestion(topic)
+  |> then_(question => {
+    switch question {
+    | Some(q) => res->status(200)->json({"question": q})
+    | None => res->status(500)->json({"error": "Failed to generate question"})
+    }
+  })
+  |> catch(_ => res->status(500)->json({"error": "Internal Server Error"}))
+})
+
 // Route POST pour traiter le texte envoyé par l'API Speech-to-Text
 quizRouter->Router.post("/process-speech", (req, res) => {
   let body = req->body

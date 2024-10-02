@@ -1,6 +1,7 @@
 @react.component
 let make = () => {
   let (selectedQuestions, setSelectedQuestions) = React.useState(() => 10)
+  let (quizQuestion, setQuizQuestion) = React.useState(() => Js.Json.null)
 
   // Liste des 8 thèmes
   let themes = ["Sport", "Histoire", "Géographie", "Cinéma", "Musique", "Art", "Littérature", "Technologie"]
@@ -9,13 +10,20 @@ let make = () => {
   let getRandomThemes = (themes: array<string>, count: int) => {
     themes
     ->Belt.Array.shuffle
-    ->Belt.Array.slice(~offset=0, ~len=count) // Supprime le `()` ici
+    ->Belt.Array.slice(~offset=0, ~len=count)
   }
 
   let randomThemes = React.useMemo(() => getRandomThemes(themes, 4), [themes])
 
   let handleThemeClick = (theme: string) => {
-    Js.log("Thème sélectionné: " ++ theme)
+    generateQuizQuestion(theme)
+    |> then_(result => {
+      switch result {
+      | Some(question) => setQuizQuestion(question)
+      | None => Js.log("Failed to generate question")
+      }
+    })
+    |> ignore
   }
 
   <div className="create-quiz-container custom-bg">
@@ -69,6 +77,10 @@ let make = () => {
           )
         )}
       </div>
+    </div>
+
+    <div className="quiz-question">
+      {quizQuestion->Js.Json.stringify |> React.string}
     </div>
   </div>
 }
