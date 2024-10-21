@@ -2,18 +2,18 @@ open Js.Promise
 open Belt
 open UserModel
 
-let users: ref<array<UserModel.user>> = ref([])
+let users: array<UserModel.user> = []
 
 // Fonction pour enregistrer un nouvel utilisateur
-let registerUser = (username: string, email: string, password: string): Js.Promise.t<Result.t<string, string>> => {
+let registerUser = async (username: string, email: string, password: string): Js.Promise.t<Result.t<string, string>> => {
   // Vérifier si l'utilisateur existe déjà
-  let existingUser = Array.find(user => user.username === username, !users)
+  let existingUser = Belt.Array.getBy(users , (user) => user.username === username)
   switch existingUser {
   | Some(_) => Promise.resolve(Result.Error("User already exists"))
   | None =>
     // Créer un nouvel utilisateur
-    let newUser = UserModel.make(Array.length(!users) + 1, username, email, password)
-    users := Array.concat(!users, [newUser])
+    let newUser = UserModel.make(Array.length(users), username, email, password)
+    let test = Belt.Array.concat(users,[newUser])
     Promise.resolve(Result.Ok("User registered successfully"))
   }
 }
@@ -21,7 +21,7 @@ let registerUser = (username: string, email: string, password: string): Js.Promi
 // Fonction pour connecter un utilisateur
 let loginUser = (username: string, password: string): Js.Promise.t<Result.t<string, string>> => {
   // Vérifier si l'utilisateur existe et que le mot de passe est correct
-  let user = Array.find(user => user.username === username && user.password === password, !users)
+  let user = Array.getBy(users, user => user.username === username && user.password === password)
   switch user {
   | Some(_) => Promise.resolve(Result.Ok("User logged in successfully"))
   | None => Promise.resolve(Result.Error("Invalid username or password"))

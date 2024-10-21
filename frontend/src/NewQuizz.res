@@ -1,7 +1,7 @@
 @react.component
-let make = () => {
+let make = (~question:Js.Json.t,~quizHook:(Js.Json.t => Js.Json.t)=>unit) => {
   let (selectedQuestions, setSelectedQuestions) = React.useState(() => 10)
-  let (quizQuestion, setQuizQuestion) = React.useState(() => Js.Json.null)
+  // let (quizQuestion, setQuizQuestion) = React.useState(() => Js.Json.null)
 
   // Liste des 8 thèmes
   let themes = ["Sport", "Histoire", "Géographie", "Cinéma", "Musique", "Art", "Littérature", "Technologie"]
@@ -16,14 +16,11 @@ let make = () => {
   let randomThemes = React.useMemo(() => getRandomThemes(themes, 4), [themes])
 
   let handleThemeClick = (theme: string) => {
-    generateQuizQuestion(theme)
-    |> then_(result => {
-      switch result {
-      | Some(question) => setQuizQuestion(question)
-      | None => Js.log("Failed to generate question")
-      }
-    })
-    |> ignore
+    let generate = async (theme:string) => {
+      (newQuestion => quizHook(question=>newQuestion))(await Openai.generateQuizQuestion(theme))
+    }
+    let _ = generate(theme)
+    ()
   }
 
   <div className="create-quiz-container custom-bg">
@@ -80,7 +77,7 @@ let make = () => {
     </div>
 
     <div className="quiz-question">
-      {quizQuestion->Js.Json.stringify |> React.string}
+      {question->Js.Json.stringify |> React.string}
     </div>
   </div>
 }

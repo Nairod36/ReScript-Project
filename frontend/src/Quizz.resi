@@ -1,2 +1,2 @@
 @react.component
-let make: unit => React.element
+let make: ~quizQuestion:Js.Json.t => React.element

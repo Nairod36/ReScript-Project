@@ -1,13 +1,17 @@
 @react.component
-let make = () => {
+let make = (~quizQuestion:Js.Json.t) => {
   let (score, setScore) = React.useState(() => 0)
-
-  let question = "Quelle est la capitale de la France?"
-  let answers = ["Paris", "Londres", "Berlin", "Madrid"]
+  let questionModel = QuestionModel.decodeQuestionModel(quizQuestion)
+  let (question, answers, response) = switch questionModel {
+    | Some(q) => (q.question, q.options, q.response)
+    | _ => ("test", [{label: "t", option: "test"}], "")
+  }
 
   let handleAnswerClick = (answer: string) => {
     Js.log(answer ++ " clicked!")
-    setScore(prevScore => prevScore + 1)
+    if(answer === response){
+      setScore(prevScore => prevScore + 1)
+    }
   }
 
   <div className="flex flex-col justify-between min-h-screen custom-bg">
@@ -17,10 +21,11 @@ let make = () => {
         {React.array(
           answers->Array.map(answer =>
             <button
+              label={answer.label}
               className="answer-button"
-              onClick={_ => handleAnswerClick(answer)}
+              onClick={_ => handleAnswerClick(answer.label)}
             >
-              {React.string(answer)}
+              {React.string(answer.option)}
             </button>
           )
         )}

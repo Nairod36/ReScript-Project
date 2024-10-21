@@ -1,38 +1,28 @@
 open Express
-open UserRoutes // Assurez-vous d'importer les routes utilisateur
-@module("dotenv") external config: unit => unit = "config"
-config()
 
-let app = expressCjs()
+let app = express()
 
-// Crée un routeur pour gérer certaines routes spécifiques
-let router = Router.make()
-
-// Middleware pour logger chaque requête
-router->Router.use((req, _res, next) => {
-  Js.log(req)
-  next()
-})
-
-// Middleware pour gérer les erreurs dans le routeur
-router->Router.useWithError((err, _req, res, _next) => {
-  Js.Console.error(err)
-  let _ = res->status(500)->endWithData("An error occurred")
-})
-
-// Middleware global pour gérer les erreurs
-app->useWithError((err, _req, res, _next) => {
-  Js.Console.error(err)
-  let _ = res->status(500)->endWithData("An error occurred")
-})
-
-// Middleware pour parser le JSON
 app->use(jsonMiddleware())
 
-// Ajout du routeur à l'application
-app->use("/api/users", UserRoutes.router)
+app->get("/", (_req, res) => {
+  let _ = res->status(200)->json({"ok": true})
+})
 
-// Démarrage du serveur sur le port 8081
+app->post("/ping", (req, res) => {
+  let body = req->body
+  let _ = switch body["name"]->Js.Nullable.toOption {
+  | Some(name) => res->status(200)->json({"message": `Hello ${name}`})
+  | None => res->status(400)->json({"error": `Missing name`})
+  }
+})
+
+QuizRoute.addRoutes(app)
+
+app->useWithError((err, _req, res, _next) => {
+  Js.Console.error(err)
+  let _ = res->status(500)->endWithData("An error occured")
+})
+
 let port = 8081
 let _ = app->listenWithCallback(port, _ => {
   Js.Console.log(`Listening on http://localhost:${port->Belt.Int.toString}`)

@@ -7,9 +7,9 @@ let make = () => {
     {switch url.path {
       // | list{""} => <Home />
       | list{"Home"} => <Home />
-      | list{"Account"} => <Account />
-      | list{"Quizz"} => <Quizz />
-      | list{"NewQuizz"} => <NewQuizz />
+      // | list{"Account"} => <Account />
+      // | list{"Quizz"} => <Quizz />
+      // | list{"NewQuizz"} => <NewQuizz />
       | _ => <NotFound />
     }}
   </div>

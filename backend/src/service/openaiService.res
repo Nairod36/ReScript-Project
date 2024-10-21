@@ -21,6 +21,7 @@ let parseToJson = (input: string) => {
     | Some(o) =>
       o
       ->String.split("\n")
+      ->Array.slice(~start=0,~end=4)
       ->Array.mapWithIndex((option, index) =>
         switch index {
         | 0 => {"label": "A", "option": option}
@@ -33,19 +34,23 @@ let parseToJson = (input: string) => {
     }
   }
   // Response
-  let response = input->String.split("Réponse correcte :")->Array.at(1)
+  let response = switch input->String.split("Réponse correcte :")->Array.at(1) {
+    |Some(i)=>i->String.charAt(1)
+    |None => "D"
+  }
 
   // Return
   {"question": question, "options": options, "response": response}
 }
 
 // POST with JSON payload
-let postJson = () => {
+let postJson = (topic:string) => {
   let postBanana = async (theme: string, apiKey: string) => {
     open Fetch
     let prompt =
       "Crée une question à choix multiples sur le thème suivant : " ++
-      theme ++ ". Fournis 4 réponses possibles, et précise laquelle est correcte."
+      theme ++ ". Fournis 4 réponses possibles, et précise laquelle est correcte.Suit le pattern suivant :\n
+{Question}\nA){reponse A}\nB){réponse B}\nC){réponse C}\nD){réponse D}\nRéponse correcte : {label de la bonne réponse}"
     let data = {
       "model": "gpt-3.5-turbo",
       "messages": [{"role": "system", "content": prompt}],
@@ -70,34 +75,68 @@ let postJson = () => {
       json => {
         let res = JSON.Decode.object(json)
         switch res {
-        | None => Js.log("Unknown response format")
+        | None => {
+            Js.log("Unknown response format")
+            Js.Json.null
+          }
         | Some(data) =>
           switch Dict.get(data, "choices") {
-          | None => Js.log("Choices not found")
+          | None => {
+              Js.log("Choices not found")
+              Js.Json.null
+            }
           | Some(choicesJson) =>
             switch JSON.Decode.array(choicesJson) {
-            | None => Js.log("Array not available")
+            | None => {
+                Js.log("Array not available")
+                Js.Json.null
+              }
             | Some(arr) =>
               let questionText = Belt.Array.get(arr, 0)
               switch questionText {
-              | None => Js.log("Question failed")
+              | None => {
+                  Js.log("Question failed")
+                  Js.Json.null
+                }
               | Some(choice) =>
                 let decodedChoice = JSON.Decode.object(choice)
                 switch decodedChoice {
-                | None => Js.log("Deserialization failed")
+                | None => {
+                    Js.log("Deserialization failed")
+                    Js.Json.null
+                  }
                 | Some(obj) =>
                   switch Dict.get(obj, "message") {
-                  | None => Js.log("Error")
+                  | None => {
+                      Js.log("Error")
+                      Js.Json.null
+                    }
                   | Some(jsonValue) =>
                     switch JSON.Decode.object(jsonValue) {
-                    | None => Js.log("Error2")
+                    | None => {
+                        Js.log("Error2")
+                        Js.Json.null
+                      }
                     | Some(message) =>
                       switch Dict.get(message, "content") {
-                      | None => Js.log("Error3")
+                      | None => {
+                          Js.log("Error3")
+                          Js.Json.null
+                        }
                       | Some(content) =>
                         switch JSON.Decode.string(content) {
-                        | None => Js.log("")
-                        | Some(r) => Js.log(parseToJson(r))
+                        | None => {
+                            Js.log("")
+                            Js.Json.null
+                          }
+                        | Some(r) => {
+                          switch parseToJson(r)->Js.Json.stringifyAny{
+                            |Some(parsed)=>{
+                              Js.Json.parseExn(parsed)
+                            }
+                            |None => Js.Json.null
+                          }
+                          }
                         }
                       }
                     }
@@ -112,9 +151,9 @@ let postJson = () => {
   }
 
   postBanana(
-    "Langage fonctionnel rescript",
+    topic,
     apiKey,
   )
 }
 
-await postJson()
+// await postJson()
