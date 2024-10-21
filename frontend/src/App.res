@@ -6,17 +6,27 @@
 let make = () => {
   let (quizQuestion, setQuizQuestion) = React.useState(() => Js.Json.null)
   let (score, setScore) = React.useState(()=>0)
+  let (topic, setTopic) = React.useState(()=>"")
   let reset = () => {
     setQuizQuestion(json => Js.Json.Null)
   }
-  let (iter, setIter) = React.useState(()=>0)
-  Js.log(quizQuestion)
-  switch quizQuestion {
-    |Js.Json.Null => {
-      <NewQuizz.make question=quizQuestion quizHook=setQuizQuestion/>
+  let generate = async (newTopic:option<string>) => {
+    let focus = switch newTopic {
+      |Some(t) => t
+      |None => topic
+    }
+    (newQuestion => setQuizQuestion(_=>newQuestion))(await Openai.generateQuizQuestion(focus))
+  }
+  let (iter, setIter) = React.useState(()=>5)
+  switch (iter, quizQuestion) {
+    |(_,Js.Json.Null) => {
+      <NewQuizz.make generate setTopic iter setIter/>
+    }
+    |(0,_) => {
+      <NewQuizz.make generate setTopic iter setIter/>
     }
     | _ => {
-    <Quizz.make quizQuestion score setScore reset/>
+    <Quizz.make generate iter setIter quizQuestion score setScore reset/>
     }
   }
 }

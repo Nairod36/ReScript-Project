@@ -7,6 +7,9 @@ import * as JsxRuntime from "react/jsx-runtime";
 function Quizz(props) {
   var reset = props.reset;
   var setScore = props.setScore;
+  var setIter = props.setIter;
+  var iter = props.iter;
+  var generate = props.generate;
   var match = React.useState(function () {
         return false;
       });
@@ -80,7 +83,23 @@ function Quizz(props) {
                                 children: "NEXT",
                                 className: "next-button",
                                 onClick: (function (param) {
-                                    reset();
+                                    var difer = async function () {
+                                      if (iter > 1) {
+                                        await generate(undefined);
+                                      } else {
+                                        reset();
+                                      }
+                                      setIter(function (param) {
+                                            return iter - 1 | 0;
+                                          });
+                                      setClicked(function (param) {
+                                            return false;
+                                          });
+                                      return setSelected(function (param) {
+                                                  return "";
+                                                });
+                                    };
+                                    difer();
                                   })
                               }) : JsxRuntime.jsx(JsxRuntime.Fragment, {})
                       ],

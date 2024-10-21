@@ -2,6 +2,7 @@
 
 import * as Quizz from "./Quizz.res.mjs";
 import * as React from "react";
+import * as Openai from "./service/Openai.res.mjs";
 import * as NewQuizz from "./NewQuizz.res.mjs";
 import * as JsxRuntime from "react/jsx-runtime";
 
@@ -14,22 +15,40 @@ function App(props) {
   var match$1 = React.useState(function () {
         return 0;
       });
+  var match$2 = React.useState(function () {
+        return "";
+      });
+  var setTopic = match$2[1];
+  var topic = match$2[0];
   var reset = function () {
     setQuizQuestion(function (json) {
           return null;
         });
   };
-  React.useState(function () {
-        return 0;
+  var generate = async function (newTopic) {
+    var focus = newTopic !== undefined ? newTopic : topic;
+    var newQuestion = await Openai.generateQuizQuestion(focus);
+    return setQuizQuestion(function (param) {
+                return newQuestion;
+              });
+  };
+  var match$3 = React.useState(function () {
+        return 5;
       });
-  console.log(quizQuestion);
-  if (!Array.isArray(quizQuestion) && (quizQuestion === null || typeof quizQuestion !== "object") && typeof quizQuestion !== "number" && typeof quizQuestion !== "string" && typeof quizQuestion !== "boolean") {
+  var setIter = match$3[1];
+  var iter = match$3[0];
+  if (!Array.isArray(quizQuestion) && (quizQuestion === null || typeof quizQuestion !== "object") && typeof quizQuestion !== "number" && typeof quizQuestion !== "string" && typeof quizQuestion !== "boolean" || iter === 0) {
     return JsxRuntime.jsx(NewQuizz.make, {
-                question: quizQuestion,
-                quizHook: setQuizQuestion
+                generate: generate,
+                setTopic: setTopic,
+                iter: iter,
+                setIter: setIter
               });
   } else {
     return JsxRuntime.jsx(Quizz.make, {
+                generate: generate,
+                iter: iter,
+                setIter: setIter,
                 quizQuestion: quizQuestion,
                 score: match$1[0],
                 setScore: match$1[1],

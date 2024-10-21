@@ -1,5 +1,5 @@
 @react.component
-let make = (~quizQuestion:Js.Json.t, ~score:int, ~setScore:(int=>int)=>unit, ~reset:()=>unit) => {
+let make = (~generate:(option<string>)=>promise<unit>, ~iter:int, ~setIter:(int=>int)=>unit, ~quizQuestion:Js.Json.t, ~score:int, ~setScore:(int=>int)=>unit, ~reset:()=>unit) => {
   let (clicked, setClicked) = React.useState(() => false)
   let (selected, setSelected) = React.useState(()=>"")
   let questionModel = QuestionModel.decodeQuestionModel(quizQuestion)
@@ -39,7 +39,24 @@ let make = (~quizQuestion:Js.Json.t, ~score:int, ~setScore:(int=>int)=>unit, ~re
 
     <div className="score mb-4 flex flex-col align-middle">
       {React.string("Score: " ++ string_of_int(score))}
-      {clicked ? <button className={"next-button"} onClick={_ => reset()}>{React.string("NEXT")}</button> : <></>}
+      {clicked ? <button 
+        className={"next-button"} 
+        onClick={_ => {
+          let difer = async () => {
+            if(iter > 1){
+              let _ = await generate(None)
+            }else{
+              let _ = reset()
+            }
+            setIter(_=>iter - 1)
+            setClicked(_=>false)
+            setSelected(_=>"")
+          }
+          let _ = difer()
+        }
+        }>
+          {React.string("NEXT")}
+        </button> : <></>}
     </div>
   </div>
 }

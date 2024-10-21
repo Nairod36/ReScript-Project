@@ -1,2 +1,2 @@
 @react.component
-let make: (~quizQuestion:Js.Json.t, ~score:int, ~setScore:(int=>int)=>unit, ~reset:()=>unit) => React.element
+let make: (~generate:(option<string>)=>promise<unit>, ~iter:int, ~setIter:(int=>int)=>unit, ~quizQuestion:Js.Json.t, ~score:int, ~setScore:(int=>int)=>unit, ~reset:()=>unit) => React.element
