@@ -7,11 +7,6 @@ import * as JsxRuntime from "react/jsx-runtime";
 
 function NewQuizz(props) {
   var quizHook = props.quizHook;
-  var match = React.useState(function () {
-        return 10;
-      });
-  var setSelectedQuestions = match[1];
-  var selectedQuestions = match[0];
   var themes = [
     "Sport",
     "Histoire",
@@ -20,108 +15,43 @@ function NewQuizz(props) {
     "Musique",
     "Art",
     "Littérature",
-    "Technologie"
+    "Technologie",
+    "South Park",
+    "Shameless",
+    "Futurama"
   ];
   var randomThemes = React.useMemo((function () {
           var count = 4;
           return Belt_Array.slice(Belt_Array.shuffle(themes), 0, count);
         }), [themes]);
-  return JsxRuntime.jsxs("div", {
-              children: [
-                JsxRuntime.jsxs("div", {
-                      children: [
-                        JsxRuntime.jsx("div", {
-                              children: "Nombre de questions",
-                              className: "label"
-                            }),
-                        JsxRuntime.jsxs("div", {
-                              children: [
-                                JsxRuntime.jsxs("label", {
-                                      children: [
-                                        JsxRuntime.jsx("input", {
-                                              checked: selectedQuestions === 5,
-                                              name: "questions",
-                                              type: "radio",
-                                              value: "5",
-                                              onChange: (function (param) {
-                                                  setSelectedQuestions(function (param) {
-                                                        return 5;
-                                                      });
+  return JsxRuntime.jsx("div", {
+              children: JsxRuntime.jsxs("div", {
+                    children: [
+                      JsxRuntime.jsx("div", {
+                            children: "Choisissez un thème",
+                            className: "label"
+                          }),
+                      JsxRuntime.jsx("div", {
+                            children: randomThemes.map(function (theme) {
+                                  return JsxRuntime.jsx("button", {
+                                              children: theme,
+                                              className: "answer-button",
+                                              onClick: (function (param) {
+                                                  var generate = async function (theme) {
+                                                    var newQuestion = await Openai.generateQuizQuestion(theme);
+                                                    return quizHook(function (question) {
+                                                                return newQuestion;
+                                                              });
+                                                  };
+                                                  generate(theme);
                                                 })
-                                            }),
-                                        "5"
-                                      ]
-                                    }),
-                                JsxRuntime.jsxs("label", {
-                                      children: [
-                                        JsxRuntime.jsx("input", {
-                                              checked: selectedQuestions === 10,
-                                              name: "questions",
-                                              type: "radio",
-                                              value: "10",
-                                              onChange: (function (param) {
-                                                  setSelectedQuestions(function (param) {
-                                                        return 10;
-                                                      });
-                                                })
-                                            }),
-                                        "10"
-                                      ]
-                                    }),
-                                JsxRuntime.jsxs("label", {
-                                      children: [
-                                        JsxRuntime.jsx("input", {
-                                              checked: selectedQuestions === 20,
-                                              name: "questions",
-                                              type: "radio",
-                                              value: "20",
-                                              onChange: (function (param) {
-                                                  setSelectedQuestions(function (param) {
-                                                        return 20;
-                                                      });
-                                                })
-                                            }),
-                                        "20"
-                                      ]
-                                    })
-                              ],
-                              className: "radio-group"
-                            })
-                      ],
-                      className: "questions-group"
-                    }),
-                JsxRuntime.jsxs("div", {
-                      children: [
-                        JsxRuntime.jsx("div", {
-                              children: "Choisissez un thème",
-                              className: "label"
-                            }),
-                        JsxRuntime.jsx("div", {
-                              children: randomThemes.map(function (theme) {
-                                    return JsxRuntime.jsx("button", {
-                                                children: theme,
-                                                className: "answer-button",
-                                                onClick: (function (param) {
-                                                    var generate = async function (theme) {
-                                                      var newQuestion = await Openai.generateQuizQuestion(theme);
-                                                      return quizHook(function (question) {
-                                                                  return newQuestion;
-                                                                });
-                                                    };
-                                                    generate(theme);
-                                                  })
-                                              });
-                                  }),
-                              className: "answers"
-                            })
-                      ],
-                      className: "themes"
-                    }),
-                JsxRuntime.jsx("div", {
-                      children: JSON.stringify(props.question),
-                      className: "quiz-question"
-                    })
-              ],
+                                            });
+                                }),
+                            className: "answers"
+                          })
+                    ],
+                    className: "themes"
+                  }),
               className: "create-quiz-container custom-bg"
             });
 }

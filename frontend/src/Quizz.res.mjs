@@ -5,12 +5,20 @@ import * as QuestionModel from "./models/QuestionModel.res.mjs";
 import * as JsxRuntime from "react/jsx-runtime";
 
 function Quizz(props) {
+  var reset = props.reset;
+  var setScore = props.setScore;
   var match = React.useState(function () {
-        return 0;
+        return false;
       });
-  var setScore = match[1];
+  var setClicked = match[1];
+  var clicked = match[0];
+  var match$1 = React.useState(function () {
+        return "";
+      });
+  var setSelected = match$1[1];
+  var selected = match$1[0];
   var questionModel = QuestionModel.decodeQuestionModel(props.quizQuestion);
-  var match$1 = questionModel !== undefined ? [
+  var match$2 = questionModel !== undefined ? [
       questionModel.question,
       questionModel.options,
       questionModel.response
@@ -22,24 +30,35 @@ function Quizz(props) {
         }],
       ""
     ];
-  var response = match$1[2];
+  var response = match$2[2];
   return JsxRuntime.jsxs("div", {
               children: [
                 JsxRuntime.jsxs("div", {
                       children: [
                         JsxRuntime.jsx("h1", {
-                              children: match$1[0],
+                              children: match$2[0],
                               className: "question"
                             }),
                         JsxRuntime.jsx("div", {
-                              children: match$1[1].map(function (answer) {
+                              children: match$2[1].map(function (answer) {
                                     return JsxRuntime.jsx("button", {
                                                 children: answer.option,
-                                                className: "answer-button",
+                                                className: clicked ? (
+                                                    answer.label === response ? "correct-answer" : (
+                                                        answer.label === selected ? "wrong-answer" : "neutral-answer"
+                                                      )
+                                                  ) : "answer-button",
+                                                disabled: clicked,
                                                 label: answer.label,
                                                 onClick: (function (param) {
                                                     var answer$1 = answer.label;
                                                     console.log(answer$1 + " clicked!");
+                                                    setClicked(function (clicked) {
+                                                          return true;
+                                                        });
+                                                    setSelected(function (selected) {
+                                                          return answer$1;
+                                                        });
                                                     if (answer$1 === response) {
                                                       return setScore(function (prevScore) {
                                                                   return prevScore + 1 | 0;
@@ -54,9 +73,18 @@ function Quizz(props) {
                       ],
                       className: "flex flex-col items-center justify-start"
                     }),
-                JsxRuntime.jsx("div", {
-                      children: "Score: " + String(match[0]),
-                      className: "score mb-4"
+                JsxRuntime.jsxs("div", {
+                      children: [
+                        "Score: " + String(props.score),
+                        clicked ? JsxRuntime.jsx("button", {
+                                children: "NEXT",
+                                className: "next-button",
+                                onClick: (function (param) {
+                                    reset();
+                                  })
+                              }) : JsxRuntime.jsx(JsxRuntime.Fragment, {})
+                      ],
+                      className: "score mb-4 flex flex-col align-middle"
                     })
               ],
               className: "flex flex-col justify-between min-h-screen custom-bg"

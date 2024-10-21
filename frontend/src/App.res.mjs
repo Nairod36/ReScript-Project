@@ -9,16 +9,31 @@ function App(props) {
   var match = React.useState(function () {
         return null;
       });
+  var setQuizQuestion = match[1];
   var quizQuestion = match[0];
+  var match$1 = React.useState(function () {
+        return 0;
+      });
+  var reset = function () {
+    setQuizQuestion(function (json) {
+          return null;
+        });
+  };
+  React.useState(function () {
+        return 0;
+      });
   console.log(quizQuestion);
   if (!Array.isArray(quizQuestion) && (quizQuestion === null || typeof quizQuestion !== "object") && typeof quizQuestion !== "number" && typeof quizQuestion !== "string" && typeof quizQuestion !== "boolean") {
     return JsxRuntime.jsx(NewQuizz.make, {
                 question: quizQuestion,
-                quizHook: match[1]
+                quizHook: setQuizQuestion
               });
   } else {
     return JsxRuntime.jsx(Quizz.make, {
-                quizQuestion: quizQuestion
+                quizQuestion: quizQuestion,
+                score: match$1[0],
+                setScore: match$1[1],
+                reset: reset
               });
   }
 }
