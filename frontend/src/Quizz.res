@@ -9,7 +9,6 @@ let make = (~generate:(option<string>)=>promise<unit>, ~iter:int, ~setIter:(int=
   }
 
   let handleAnswerClick = (answer: string) => {
-    Js.log(answer ++ " clicked!")
     setClicked(clicked => true)
     setSelected(selected => answer)
     if(answer === response){

@@ -1,7 +1,6 @@
 @react.component
 let make = () => {
   let handleButtonClick = (path => {
-    Js.log("Button clicked!")
     RescriptReactRouter.push(path)
   })
 

@@ -10,7 +10,6 @@ let generateQuizQuestion = async (topic: string) => {
   )
 
   (json => {
-    Js.log(json)
     json
   })(await response->Response.json)
 }

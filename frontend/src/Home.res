@@ -2,7 +2,6 @@
 let make = () => {
   // Handler pour le clic sur l'image-bouton
   let handleImageClick = (path => {
-    Js.log("Image button clicked!")
     RescriptReactRouter.push(path)
   })
 

@@ -14,7 +14,7 @@ let decodeOption = json => {
   | None => None
   | Some(obj) =>
     let label = obj->Js.Dict.get("label")->Belt.Option.flatMap(Js.Json.decodeString)
-    let option = obj->Js.Dict.get("option")->Belt.Option.flatMap(Js.Json.decodeString)
+    let option = obj->Js.Dict.get("text")->Belt.Option.flatMap(Js.Json.decodeString)
 
     switch (label, option) {
     | (Some(label), Some(option)) =>
@@ -32,9 +32,9 @@ let decodeQuestionModel = json => {
     switch apiresponse {
         |Some(r)=>{
             let q = r->Js.Dict.get("question")->Belt.Option.flatMap(Js.Json.decodeString)
-            let o = r->Js.Dict.get("options")->Belt.Option.flatMap(Js.Json.decodeArray)
+            let o = r->Js.Dict.get("choices")->Belt.Option.flatMap(Js.Json.decodeArray)
                 ->Belt.Option.map(arr=>arr->Belt.Array.keepMap(decodeOption))
-            let r = r->Js.Dict.get("response")->Belt.Option.flatMap(Js.Json.decodeString)
+            let r = r->Js.Dict.get("correctAnswer")->Belt.Option.flatMap(Js.Json.decodeString)
             switch (q, o, r) {
                 |(Some(q), Some(o), Some(r)) => Some({question:q, options:o ,response:r})
                 | _ => None
